@@ -52,6 +52,10 @@ export default class Search extends Component {
     }
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.blurTimeout)
+  }
+
   SearchItemInArrayObjects(items, input, searchKey) {
     var reg = new RegExp(input.split('').join('\\w*').replace(/\W/, ''), 'i')
     return items.filter((item) => {
@@ -123,16 +127,24 @@ export default class Search extends Component {
   updateSearchValue(value) {
     const { items } = this.props;
     this.setState({ searchValue: value }, () => {
-      let menuItems = this.SearchItemInArrayObjects(items, this.state.searchValue, 'value')
-      this.setMenuItems(menuItems)
+      if (value) {
+        let menuItems = this.SearchItemInArrayObjects(items, this.state.searchValue, 'value')
+        console.log(`react-search:\n updateSearchValue()\n  Search value: ${value}\n  Items: ${JSON.stringify(menuItems)}`)
+        this.setMenuItems(menuItems)
+      } else {
+        this.setMenuItems([])
+      }
     })
   }
 
   showAllMenuItems() {
-    const { items } = this.props;
-    this.setState({searchValue: ''})
-    let menuItems = this.SearchItemInArrayObjects(items, '', 'value')
-    this.setMenuItems(menuItems)
+    if (this.state.searchValue) {
+      const { items } = this.props
+      let menuItems = this.SearchItemInArrayObjects(items, this.state.searchValue, 'value')
+      this.setMenuItems(menuItems)
+    } else {
+      this.setMenuItems([])
+    }
   }
 
   setMenuItems(items) {
@@ -153,20 +165,24 @@ export default class Search extends Component {
     return (item != undefined) ? true : false
   }
 
-  focusInput() {
+  focusInput(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     this.showAllMenuItems()
     ReactDOM.findDOMNode(this.refs.searchInput).placeholder = ''
-    ReactDOM.findDOMNode(this.refs.searchInput).value = ''
     this.blurTimeout = setTimeout(() => {
       ReactDOM.findDOMNode(this.refs.searchInput).focus()
-    }, 100);
+    }, 100)
   }
 
   blurInput() {
     this.blurTimeout = setTimeout(() => {
-      ReactDOM.findDOMNode(this.refs.searchInput).blur()
+      let input = ReactDOM.findDOMNode(this.refs.searchInput)
+      if (input) input.blur()
       this.hideMenu()
-    }, 100);
+    }, 100)
   }
 
   resetPlaceholder() {
@@ -193,7 +209,7 @@ export default class Search extends Component {
   }
 
   handleItemClick(e) {
-    this.focusInput()
+    this.focusInput(e)
   }
 
   handleSelect(e) {
@@ -204,12 +220,19 @@ export default class Search extends Component {
 
   handleKeyChange (e) {
     const { getItemsAsync } = this.props;
-    let value = this.refs.searchInput.value
-    this.triggerKeyChange(value)
-    if( getItemsAsync != undefined ) {
-      this.triggerGetItemsAsync(value)
+    let newValue = this.refs.searchInput.value
+    let oldValue = this.state.searchValue
+    if (newValue) {
+      if (newValue !== oldValue) {
+        this.triggerKeyChange(newValue)
+        if( getItemsAsync != undefined ) {
+          this.triggerGetItemsAsync(newValue)
+        } else {
+          this.updateSearchValue(newValue)
+        }
+      }
     } else {
-      this.updateSearchValue(value)
+      this.updateSearchValue()
     }
   }
 

@@ -377,15 +377,19 @@
 	    }
 	  }, {
 	    key: 'focusInput',
-	    value: function focusInput() {
+	    value: function focusInput(e) {
 	      var _this7 = this;
 
+	      if (e) {
+	        e.preventDefault();
+	        e.stopPropagation();
+	      }
 	      this.showAllMenuItems();
 	      _reactDom2.default.findDOMNode(this.refs.searchInput).placeholder = '';
-	      _reactDom2.default.findDOMNode(this.refs.searchInput).value = '';
 	      this.blurTimeout = setTimeout(function () {
+	        console.log('Focusing search');
 	        _reactDom2.default.findDOMNode(_this7.refs.searchInput).focus();
-	      }, 100);
+	      }, 500);
 	    }
 	  }, {
 	    key: 'blurInput',
@@ -428,7 +432,7 @@
 	  }, {
 	    key: 'handleItemClick',
 	    value: function handleItemClick(e) {
-	      this.focusInput();
+	      this.focusInput(e);
 	    }
 	  }, {
 	    key: 'handleSelect',
