@@ -12,7 +12,8 @@ export default class Search extends Component {
       placeholder: '— None',
       NotFoundPlaceholder: 'Please search for some items...',
       maxSelected: 100,
-      multiple: false
+      multiple: false,
+      filterSearchItems: false
     }
   }
 
@@ -28,6 +29,7 @@ export default class Search extends Component {
       NotFoundPlaceholder: React.PropTypes.string,
       maxSelected: React.PropTypes.number,
       multiple: React.PropTypes.bool,
+      filterSearchItems: React.PropTypes.bool,
       onKeyChange: React.PropTypes.func,
       getItemsAsync: React.PropTypes.func
     }
@@ -125,11 +127,10 @@ export default class Search extends Component {
   }
 
   updateSearchValue(value) {
-    const { items } = this.props;
+    const { items, filterSearchItems } = this.props;
     this.setState({ searchValue: value }, () => {
       if (value) {
-        let menuItems = this.SearchItemInArrayObjects(items, this.state.searchValue, 'value')
-        console.log(`react-search:\n updateSearchValue()\n  Search value: ${value}\n  Items: ${JSON.stringify(menuItems)}`)
+        let menuItems = filterSearchItems ? this.SearchItemInArrayObjects(items, this.state.searchValue, 'value') : items
         this.setMenuItems(menuItems)
       } else {
         this.setMenuItems([])
@@ -139,8 +140,8 @@ export default class Search extends Component {
 
   showAllMenuItems() {
     if (this.state.searchValue) {
-      const { items } = this.props
-      let menuItems = this.SearchItemInArrayObjects(items, this.state.searchValue, 'value')
+      const { items, filterSearchItems } = this.props
+      let menuItems = filterSearchItems ? this.SearchItemInArrayObjects(items, this.state.searchValue, 'value') : items
       this.setMenuItems(menuItems)
     } else {
       this.setMenuItems([])

@@ -200,7 +200,8 @@
 	        placeholder: '— None',
 	        NotFoundPlaceholder: 'Please search for some items...',
 	        maxSelected: 100,
-	        multiple: false
+	        multiple: false,
+	        filterSearchItems: false
 	      };
 	    }
 	  }, {
@@ -214,6 +215,7 @@
 	        NotFoundPlaceholder: _react2.default.PropTypes.string,
 	        maxSelected: _react2.default.PropTypes.number,
 	        multiple: _react2.default.PropTypes.bool,
+	        filterSearchItems: _react2.default.PropTypes.bool,
 	        onKeyChange: _react2.default.PropTypes.func,
 	        getItemsAsync: _react2.default.PropTypes.func
 	      };
@@ -244,6 +246,11 @@
 	      } else {
 	        this.addSelected(initialSelected);
 	      }
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      clearTimeout(this.blurTimeout);
 	    }
 	  }, {
 	    key: 'SearchItemInArrayObjects',
@@ -337,21 +344,32 @@
 	    value: function updateSearchValue(value) {
 	      var _this6 = this;
 
-	      var items = this.props.items;
+	      var _props = this.props,
+	          items = _props.items,
+	          filterSearchItems = _props.filterSearchItems;
 
 	      this.setState({ searchValue: value }, function () {
-	        var menuItems = _this6.SearchItemInArrayObjects(items, _this6.state.searchValue, 'value');
-	        _this6.setMenuItems(menuItems);
+	        if (value) {
+	          var menuItems = filterSearchItems ? _this6.SearchItemInArrayObjects(items, _this6.state.searchValue, 'value') : items;
+	          _this6.setMenuItems(menuItems);
+	        } else {
+	          _this6.setMenuItems([]);
+	        }
 	      });
 	    }
 	  }, {
 	    key: 'showAllMenuItems',
 	    value: function showAllMenuItems() {
-	      var items = this.props.items;
+	      if (this.state.searchValue) {
+	        var _props2 = this.props,
+	            items = _props2.items,
+	            filterSearchItems = _props2.filterSearchItems;
 
-	      this.setState({ searchValue: '' });
-	      var menuItems = this.SearchItemInArrayObjects(items, '', 'value');
-	      this.setMenuItems(menuItems);
+	        var menuItems = filterSearchItems ? this.SearchItemInArrayObjects(items, this.state.searchValue, 'value') : items;
+	        this.setMenuItems(menuItems);
+	      } else {
+	        this.setMenuItems([]);
+	      }
 	    }
 	  }, {
 	    key: 'setMenuItems',
@@ -387,9 +405,8 @@
 	      this.showAllMenuItems();
 	      _reactDom2.default.findDOMNode(this.refs.searchInput).placeholder = '';
 	      this.blurTimeout = setTimeout(function () {
-	        console.log('Focusing search');
 	        _reactDom2.default.findDOMNode(_this7.refs.searchInput).focus();
-	      }, 500);
+	      }, 100);
 	    }
 	  }, {
 	    key: 'blurInput',
@@ -397,7 +414,8 @@
 	      var _this8 = this;
 
 	      this.blurTimeout = setTimeout(function () {
-	        _reactDom2.default.findDOMNode(_this8.refs.searchInput).blur();
+	        var input = _reactDom2.default.findDOMNode(_this8.refs.searchInput);
+	        if (input) input.blur();
 	        _this8.hideMenu();
 	      }, 100);
 	    }
@@ -446,12 +464,19 @@
 	    value: function handleKeyChange(e) {
 	      var getItemsAsync = this.props.getItemsAsync;
 
-	      var value = this.refs.searchInput.value;
-	      this.triggerKeyChange(value);
-	      if (getItemsAsync != undefined) {
-	        this.triggerGetItemsAsync(value);
+	      var newValue = this.refs.searchInput.value;
+	      var oldValue = this.state.searchValue;
+	      if (newValue) {
+	        if (newValue !== oldValue) {
+	          this.triggerKeyChange(newValue);
+	          if (getItemsAsync != undefined) {
+	            this.triggerGetItemsAsync(newValue);
+	          } else {
+	            this.updateSearchValue(newValue);
+	          }
+	        }
 	      } else {
-	        this.updateSearchValue(value);
+	        this.updateSearchValue();
 	      }
 	    }
 	  }, {
@@ -483,9 +508,9 @@
 	      var _this10 = this;
 
 	      var selectedItems = this.state.selectedItems;
-	      var _props = this.props,
-	          multiple = _props.multiple,
-	          placeholder = _props.placeholder;
+	      var _props3 = this.props,
+	          multiple = _props3.multiple,
+	          placeholder = _props3.placeholder;
 
 	      if (!selectedItems.length && multiple) return;
 
@@ -512,9 +537,9 @@
 	  }, {
 	    key: 'renderInput',
 	    value: function renderInput() {
-	      var _props2 = this.props,
-	          maxSelected = _props2.maxSelected,
-	          multiple = _props2.multiple;
+	      var _props4 = this.props,
+	          maxSelected = _props4.maxSelected,
+	          multiple = _props4.multiple;
 	      var selectedItems = this.state.selectedItems;
 
 	      var inputClass = 'autocomplete__input';
@@ -534,9 +559,9 @@
 	  }, {
 	    key: 'getMenuClass',
 	    value: function getMenuClass() {
-	      var _props3 = this.props,
-	          maxSelected = _props3.maxSelected,
-	          multiple = _props3.multiple;
+	      var _props5 = this.props,
+	          maxSelected = _props5.maxSelected,
+	          multiple = _props5.multiple;
 	      var _state2 = this.state,
 	          menuVisible = _state2.menuVisible,
 	          selectedItems = _state2.selectedItems;
