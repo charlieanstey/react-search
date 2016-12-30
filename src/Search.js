@@ -163,7 +163,7 @@ export default class Search extends Component {
     let item = selectedItems.find( (s) => {
         return s.id === itemId;
     });
-    return (item != undefined) ? true : false
+    return (item != undefined)
   }
 
   focusInput(e) {
@@ -257,7 +257,7 @@ export default class Search extends Component {
         )
       } else {
         return (
-          <li key={i} className='autocomplete__item' onClick={this.handleSelect.bind(this)}>
+          <li key={i} className='autocomplete__item' onMouseDown={this.handleSelect.bind(this)}>
             <span key={i} data-id={item.id} dangerouslySetInnerHTML={{__html: item.value }}></span>
           </li>
         )
