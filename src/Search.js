@@ -257,7 +257,7 @@ export default class Search extends Component {
         )
       } else {
         return (
-          <li key={i} className='autocomplete__item' onMouseDown={this.handleSelect.bind(this)}>
+          <li key={i} className='autocomplete__item' onMouseDown={this.handleSelect.bind(this)} onTouchStart={this.handleSelect.bind(this)}>
             <span key={i} data-id={item.id} dangerouslySetInnerHTML={{__html: item.value }}></span>
           </li>
         )

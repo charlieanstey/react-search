@@ -497,7 +497,7 @@
 	        if (_this9.itemSelected(item.id)) {
 	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item autocomplete__item--disabled' }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
 	        } else {
-	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item', onMouseDown: _this9.handleSelect.bind(_this9) }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
+	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item', onMouseDown: _this9.handleSelect.bind(_this9), onTouchStart: _this9.handleSelect.bind(_this9) }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
 	        }
 	      });
 	      return items;
