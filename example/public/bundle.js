@@ -516,7 +516,7 @@
 
 	      if (!selectedItems.length && !multiple) {
 	        return _react2.default.createElement('li', { className: 'autocomplete__item autocomplete__item--selected autocomplete__item__dropdown',
-	          onClick: this.handleItemClick.bind(this) }, _react2.default.createElement('span', { dangerouslySetInnerHTML: { __html: placeholder } }), _react2.default.createElement('span', { className: 'autocomplete__dropdown' }));
+	          onClick: this.handleItemClick.bind(this) }, _react2.default.createElement('span', { className: 'autocomplete__placeholder', dangerouslySetInnerHTML: { __html: placeholder } }), _react2.default.createElement('span', { className: 'autocomplete__dropdown' }));
 	      }
 
 	      var items = selectedItems.map(function (item, i) {

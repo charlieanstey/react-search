@@ -275,7 +275,7 @@ export default class Search extends Component {
       return (
         <li className='autocomplete__item autocomplete__item--selected autocomplete__item__dropdown'
             onClick={this.handleItemClick.bind(this)}>
-          <span dangerouslySetInnerHTML={{__html: placeholder }}></span>
+          <span className="autocomplete__placeholder" dangerouslySetInnerHTML={{__html: placeholder }}></span>
           <span className='autocomplete__dropdown' />
         </li>
       )
