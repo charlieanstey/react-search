@@ -284,8 +284,7 @@ export default class Search extends Component {
     let items = selectedItems.map((item, i) => {
       let itemClass = 'autocomplete__item autocomplete__item--selected autocomplete__item__dropdown'
       let dropDown = <span className='autocomplete__dropdown' />
-      let icon = <span data-id={item.id} className='autocomplete__close'
-                     onClick={this.handleRemove.bind(this)}></span>
+      let icon = <span className='autocomplete__close'></span>
 
       if(multiple) {
         dropDown = null
@@ -293,7 +292,7 @@ export default class Search extends Component {
       }
 
       return (
-        <li key={i} className={itemClass} onClick={this.handleItemClick.bind(this)}>
+        <li key={i} data-id={item.id} className={itemClass} onClick={this.handleRemove.bind(this)}>
           <span data-id={item.id} dangerouslySetInnerHTML={{__html: item.value }}></span>
           { icon }
           { dropDown }

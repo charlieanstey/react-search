@@ -522,15 +522,14 @@
 	      var items = selectedItems.map(function (item, i) {
 	        var itemClass = 'autocomplete__item autocomplete__item--selected autocomplete__item__dropdown';
 	        var dropDown = _react2.default.createElement('span', { className: 'autocomplete__dropdown' });
-	        var icon = _react2.default.createElement('span', { 'data-id': item.id, className: 'autocomplete__close',
-	          onClick: _this10.handleRemove.bind(_this10) });
+	        var icon = _react2.default.createElement('span', { className: 'autocomplete__close' });
 
 	        if (multiple) {
 	          dropDown = null;
 	          itemClass = 'autocomplete__item autocomplete__item--selected';
 	        }
 
-	        return _react2.default.createElement('li', { key: i, className: itemClass, onClick: _this10.handleItemClick.bind(_this10) }, _react2.default.createElement('span', { 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }), icon, dropDown);
+	        return _react2.default.createElement('li', { key: i, 'data-id': item.id, className: itemClass, onClick: _this10.handleRemove.bind(_this10) }, _react2.default.createElement('span', { 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }), icon, dropDown);
 	      });
 	      return items;
 	    }
