@@ -293,7 +293,7 @@ export default class Search extends Component {
 
       return (
         <li key={i} data-id={item.id} className={itemClass} onClick={this.handleRemove.bind(this)}>
-          <span data-id={item.id} dangerouslySetInnerHTML={{__html: item.value }}></span>
+          <span className='autocomplete__item__value' data-id={item.id} dangerouslySetInnerHTML={{__html: item.value }}></span>
           { icon }
           { dropDown }
         </li>
