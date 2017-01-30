@@ -508,7 +508,7 @@
 	          fixedMenu = _props7.fixedMenu;
 
 	      if (!menuItems.length && !fixedMenu) {
-	        return _react2.default.createElement('span', { 'data-id': 0 }, NotFoundPlaceholder);
+	        return null;
 	      }
 
 	      var items = menuItems.map(function (item, i) {
