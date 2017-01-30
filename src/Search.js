@@ -245,8 +245,8 @@ export default class Search extends Component {
 
   renderMenuItems() {
     const { menuItems, selectedItems } = this.state;
-    const { NotFoundPlaceholder } = this.props;
-    if(!menuItems.length) {
+    const { NotFoundPlaceholder, fixedMenu } = this.props;
+    if(!menuItems.length && !fixedMenu) {
       return (
         <li className='autocomplete__item autocomplete__item--disabled'>
           <span data-id={0}>{NotFoundPlaceholder}</span>

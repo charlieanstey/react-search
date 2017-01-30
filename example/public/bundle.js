@@ -503,9 +503,11 @@
 	      var _state = this.state,
 	          menuItems = _state.menuItems,
 	          selectedItems = _state.selectedItems;
-	      var NotFoundPlaceholder = this.props.NotFoundPlaceholder;
+	      var _props7 = this.props,
+	          NotFoundPlaceholder = _props7.NotFoundPlaceholder,
+	          fixedMenu = _props7.fixedMenu;
 
-	      if (!menuItems.length) {
+	      if (!menuItems.length && !fixedMenu) {
 	        return _react2.default.createElement('li', { className: 'autocomplete__item autocomplete__item--disabled' }, _react2.default.createElement('span', { 'data-id': 0 }, NotFoundPlaceholder));
 	      }
 
@@ -524,9 +526,9 @@
 	      var _this10 = this;
 
 	      var selectedItems = this.state.selectedItems;
-	      var _props7 = this.props,
-	          multiple = _props7.multiple,
-	          placeholder = _props7.placeholder;
+	      var _props8 = this.props,
+	          multiple = _props8.multiple,
+	          placeholder = _props8.placeholder;
 
 	      if (!selectedItems.length && multiple) return;
 
@@ -551,9 +553,9 @@
 	  }, {
 	    key: 'renderInput',
 	    value: function renderInput() {
-	      var _props8 = this.props,
-	          maxSelected = _props8.maxSelected,
-	          multiple = _props8.multiple;
+	      var _props9 = this.props,
+	          maxSelected = _props9.maxSelected,
+	          multiple = _props9.multiple;
 	      var selectedItems = this.state.selectedItems;
 
 	      var inputClass = 'autocomplete__input';
@@ -573,9 +575,9 @@
 	  }, {
 	    key: 'getMenuClass',
 	    value: function getMenuClass() {
-	      var _props9 = this.props,
-	          maxSelected = _props9.maxSelected,
-	          multiple = _props9.multiple;
+	      var _props10 = this.props,
+	          maxSelected = _props10.maxSelected,
+	          multiple = _props10.multiple;
 	      var _state2 = this.state,
 	          menuVisible = _state2.menuVisible,
 	          selectedItems = _state2.selectedItems;
