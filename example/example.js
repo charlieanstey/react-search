@@ -49,6 +49,7 @@ class TestComponent extends Component {
 
         <Search items={this.state.repos}
                 multiple={true}
+                fixedMenu={true}
                 getItemsAsync={this.getItemsAsync.bind(this)}
                 onItemsChanged={this.HiItems.bind(this)} />
       </div>

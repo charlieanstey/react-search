@@ -124,6 +124,7 @@
 	          onItemsChanged: this.HiItems.bind(this) }),
 	        _react2.default.createElement(_Search2.default, { items: this.state.repos,
 	          multiple: true,
+	          fixedMenu: true,
 	          getItemsAsync: this.getItemsAsync.bind(this),
 	          onItemsChanged: this.HiItems.bind(this) })
 	      );
@@ -201,7 +202,8 @@
 	        NotFoundPlaceholder: 'Please search for some items...',
 	        maxSelected: 100,
 	        multiple: false,
-	        filterSearchItems: false
+	        filterSearchItems: false,
+	        fixedMenu: false
 	      };
 	    }
 	  }, {
@@ -216,6 +218,7 @@
 	        maxSelected: _react2.default.PropTypes.number,
 	        multiple: _react2.default.PropTypes.bool,
 	        filterSearchItems: _react2.default.PropTypes.bool,
+	        fixedMenu: _react2.default.PropTypes.bool,
 	        onKeyChange: _react2.default.PropTypes.func,
 	        getItemsAsync: _react2.default.PropTypes.func
 	      };
@@ -239,13 +242,16 @@
 	  _createClass(Search, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      var initialSelected = this.props.initialSelected;
+	      var _props = this.props,
+	          initialSelected = _props.initialSelected,
+	          fixedMenu = _props.fixedMenu;
 
 	      if (initialSelected instanceof Array) {
 	        this.setSelected(initialSelected);
 	      } else {
 	        this.addSelected(initialSelected);
 	      }
+	      if (fixedMenu) this.showMenu();
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
@@ -265,10 +271,12 @@
 	  }, {
 	    key: 'selectMenuItem',
 	    value: function selectMenuItem(item) {
-	      var multiple = this.props.multiple;
+	      var _props2 = this.props,
+	          multiple = _props2.multiple,
+	          fixedMenu = _props2.fixedMenu;
 
 	      multiple ? this.addSelected(item) : this.setSelected([item]);
-	      this.hideMenu();
+	      if (!fixedMenu) this.hideMenu();
 	    }
 	  }, {
 	    key: 'showMenu',
@@ -344,9 +352,9 @@
 	    value: function updateSearchValue(value) {
 	      var _this6 = this;
 
-	      var _props = this.props,
-	          items = _props.items,
-	          filterSearchItems = _props.filterSearchItems;
+	      var _props3 = this.props,
+	          items = _props3.items,
+	          filterSearchItems = _props3.filterSearchItems;
 
 	      this.setState({ searchValue: value }, function () {
 	        if (value) {
@@ -361,9 +369,9 @@
 	    key: 'showAllMenuItems',
 	    value: function showAllMenuItems() {
 	      if (this.state.searchValue) {
-	        var _props2 = this.props,
-	            items = _props2.items,
-	            filterSearchItems = _props2.filterSearchItems;
+	        var _props4 = this.props,
+	            items = _props4.items,
+	            filterSearchItems = _props4.filterSearchItems;
 
 	        var menuItems = filterSearchItems ? this.SearchItemInArrayObjects(items, this.state.searchValue, 'value') : items;
 	        this.setMenuItems(menuItems);
@@ -374,12 +382,14 @@
 	  }, {
 	    key: 'setMenuItems',
 	    value: function setMenuItems(items) {
-	      var getItemsAsync = this.props.getItemsAsync;
+	      var _props5 = this.props,
+	          getItemsAsync = _props5.getItemsAsync,
+	          fixedMenu = _props5.fixedMenu;
 
 	      this.setState({ menuItems: items });
 	      if (items.length || getItemsAsync != undefined) {
 	        this.showMenu();
-	      } else {
+	      } else if (!fixedMenu) {
 	        this.hideMenu();
 	      }
 	    }
@@ -406,18 +416,24 @@
 	      _reactDom2.default.findDOMNode(this.refs.searchInput).placeholder = '';
 	      this.blurTimeout = setTimeout(function () {
 	        _reactDom2.default.findDOMNode(_this7.refs.searchInput).focus();
-	      }, 100);
+	      }, 500);
 	    }
 	  }, {
 	    key: 'blurInput',
 	    value: function blurInput() {
 	      var _this8 = this;
 
+	      var _props6 = this.props,
+	          multiple = _props6.multiple,
+	          fixedMenu = _props6.fixedMenu;
+
 	      this.blurTimeout = setTimeout(function () {
 	        var input = _reactDom2.default.findDOMNode(_this8.refs.searchInput);
 	        if (input) input.blur();
-	        _this8.hideMenu();
-	      }, 100);
+	        if (!multiple || !fixedMenu) {
+	          _this8.hideMenu();
+	        }
+	      }, 500);
 	    }
 	  }, {
 	    key: 'resetPlaceholder',
@@ -497,7 +513,7 @@
 	        if (_this9.itemSelected(item.id)) {
 	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item autocomplete__item--disabled' }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
 	        } else {
-	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item', onMouseDown: _this9.handleSelect.bind(_this9), onTouchStart: _this9.handleSelect.bind(_this9) }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
+	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item', onClick: _this9.handleSelect.bind(_this9) }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
 	        }
 	      });
 	      return items;
@@ -508,9 +524,9 @@
 	      var _this10 = this;
 
 	      var selectedItems = this.state.selectedItems;
-	      var _props3 = this.props,
-	          multiple = _props3.multiple,
-	          placeholder = _props3.placeholder;
+	      var _props7 = this.props,
+	          multiple = _props7.multiple,
+	          placeholder = _props7.placeholder;
 
 	      if (!selectedItems.length && multiple) return;
 
@@ -535,9 +551,9 @@
 	  }, {
 	    key: 'renderInput',
 	    value: function renderInput() {
-	      var _props4 = this.props,
-	          maxSelected = _props4.maxSelected,
-	          multiple = _props4.multiple;
+	      var _props8 = this.props,
+	          maxSelected = _props8.maxSelected,
+	          multiple = _props8.multiple;
 	      var selectedItems = this.state.selectedItems;
 
 	      var inputClass = 'autocomplete__input';
@@ -557,9 +573,9 @@
 	  }, {
 	    key: 'getMenuClass',
 	    value: function getMenuClass() {
-	      var _props5 = this.props,
-	          maxSelected = _props5.maxSelected,
-	          multiple = _props5.multiple;
+	      var _props9 = this.props,
+	          maxSelected = _props9.maxSelected,
+	          multiple = _props9.multiple;
 	      var _state2 = this.state,
 	          menuVisible = _state2.menuVisible,
 	          selectedItems = _state2.selectedItems;

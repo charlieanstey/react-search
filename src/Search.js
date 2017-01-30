@@ -13,7 +13,8 @@ export default class Search extends Component {
       NotFoundPlaceholder: 'Please search for some items...',
       maxSelected: 100,
       multiple: false,
-      filterSearchItems: false
+      filterSearchItems: false,
+      fixedMenu: false
     }
   }
 
@@ -30,6 +31,7 @@ export default class Search extends Component {
       maxSelected: React.PropTypes.number,
       multiple: React.PropTypes.bool,
       filterSearchItems: React.PropTypes.bool,
+      fixedMenu: React.PropTypes.bool,
       onKeyChange: React.PropTypes.func,
       getItemsAsync: React.PropTypes.func
     }
@@ -46,12 +48,13 @@ export default class Search extends Component {
   }
 
   componentDidMount() {
-    const { initialSelected } = this.props;
+    const { initialSelected, fixedMenu } = this.props;
     if(initialSelected instanceof Array) {
       this.setSelected(initialSelected)
     } else {
       this.addSelected(initialSelected)
     }
+    if (fixedMenu) this.showMenu()
   }
 
   componentWillUnmount() {
@@ -68,9 +71,9 @@ export default class Search extends Component {
   }
 
   selectMenuItem (item) {
-    const { multiple } = this.props;
+    const { multiple, fixedMenu } = this.props;
     multiple ? this.addSelected(item) : this.setSelected( [item] )
-    this.hideMenu()
+    if (!fixedMenu) this.hideMenu()
   }
 
   showMenu() {
@@ -149,11 +152,11 @@ export default class Search extends Component {
   }
 
   setMenuItems(items) {
-    const { getItemsAsync } = this.props;
+    const { getItemsAsync, fixedMenu } = this.props;
     this.setState({menuItems: items})
     if(items.length || getItemsAsync != undefined){
       this.showMenu()
-    } else {
+    } else if (!fixedMenu) {
       this.hideMenu()
     }
   }
@@ -175,15 +178,18 @@ export default class Search extends Component {
     ReactDOM.findDOMNode(this.refs.searchInput).placeholder = ''
     this.blurTimeout = setTimeout(() => {
       ReactDOM.findDOMNode(this.refs.searchInput).focus()
-    }, 100)
+    }, 500)
   }
 
   blurInput() {
+    const { multiple, fixedMenu } = this.props;
     this.blurTimeout = setTimeout(() => {
       let input = ReactDOM.findDOMNode(this.refs.searchInput)
       if (input) input.blur()
-      this.hideMenu()
-    }, 100)
+      if (!multiple || !fixedMenu) {
+        this.hideMenu()
+      }
+    }, 500)
   }
 
   resetPlaceholder() {
@@ -257,7 +263,7 @@ export default class Search extends Component {
         )
       } else {
         return (
-          <li key={i} className='autocomplete__item' onMouseDown={this.handleSelect.bind(this)} onTouchStart={this.handleSelect.bind(this)}>
+          <li key={i} className='autocomplete__item' onClick={this.handleSelect.bind(this)}>
             <span key={i} data-id={item.id} dangerouslySetInnerHTML={{__html: item.value }}></span>
           </li>
         )
