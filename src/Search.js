@@ -247,11 +247,7 @@ export default class Search extends Component {
     const { menuItems, selectedItems } = this.state;
     const { NotFoundPlaceholder, fixedMenu } = this.props;
     if(!menuItems.length && !fixedMenu) {
-      return (
-        <li className='autocomplete__item autocomplete__item--disabled'>
-          <span data-id={0}>{NotFoundPlaceholder}</span>
-        </li>
-      )
+      return null
     }
 
     let items = menuItems.map((item, i) => {
@@ -277,7 +273,7 @@ export default class Search extends Component {
     const { multiple, placeholder } = this.props;
     if(!selectedItems.length && multiple ) return;
 
-    if(!selectedItems.length && !multiple ) {
+    if(!multiple ) {
       return (
         <li className='autocomplete__item autocomplete__item--selected autocomplete__item__dropdown'
             onClick={this.handleItemClick.bind(this)}>

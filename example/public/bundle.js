@@ -508,7 +508,7 @@
 	          fixedMenu = _props7.fixedMenu;
 
 	      if (!menuItems.length && !fixedMenu) {
-	        return _react2.default.createElement('li', { className: 'autocomplete__item autocomplete__item--disabled' }, _react2.default.createElement('span', { 'data-id': 0 }, NotFoundPlaceholder));
+	        return _react2.default.createElement('span', { 'data-id': 0 }, NotFoundPlaceholder);
 	      }
 
 	      var items = menuItems.map(function (item, i) {
@@ -532,7 +532,7 @@
 
 	      if (!selectedItems.length && multiple) return;
 
-	      if (!selectedItems.length && !multiple) {
+	      if (!multiple) {
 	        return _react2.default.createElement('li', { className: 'autocomplete__item autocomplete__item--selected autocomplete__item__dropdown',
 	          onClick: this.handleItemClick.bind(this) }, _react2.default.createElement('span', { className: 'autocomplete__placeholder', dangerouslySetInnerHTML: { __html: placeholder } }), _react2.default.createElement('span', { className: 'autocomplete__dropdown' }));
 	      }
