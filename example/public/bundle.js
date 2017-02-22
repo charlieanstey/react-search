@@ -589,6 +589,9 @@
 	      if (menuVisible && selectedItems.length < maxSelected) {
 	        menuClass = 'autocomplete__menu';
 	      }
+	      if (selectedItems.length >= maxSelected) {
+	        menuClass = 'autocomplete__menu autocomplete__menu--hidden';
+	      }
 	      return menuClass;
 	    }
 	  }, {
