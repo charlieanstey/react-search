@@ -193,8 +193,8 @@ export default class Search extends Component {
   }
 
   resetPlaceholder() {
-    let placeholder = ReactDOM.findDOMNode(this.refs.placeholder)
-    placeholder = this.props.placeholder
+    let el = ReactDOM.findDOMNode(this.refs.placeholder)
+    el.placeholder = this.props.placeholder
   }
 
   handleRemove(e) {
@@ -205,10 +205,6 @@ export default class Search extends Component {
 
   handleFocus(e) {
     this.focusInput()
-  }
-
-  handleBlur(e) {
-    this.blurInput()
   }
 
   handleClick(e) {
@@ -239,8 +235,14 @@ export default class Search extends Component {
         }
       }
     } else {
-      this.updateSearchValue()
+      this.updateSearchValue(newValue)
     }
+  }
+  
+  handleInputClear(e) {
+    ReactDOM.findDOMNode(this.refs.searchInput).value = ''
+    this.updateSearchValue('')
+    this.focusInput(e)
   }
 
   renderMenuItems() {
@@ -304,21 +306,32 @@ export default class Search extends Component {
 
   renderInput() {
     const { maxSelected, multiple } = this.props;
-    const { selectedItems } = this.state;
+    const { menuVisible, searchValue, selectedItems } = this.state;
     let inputClass = 'autocomplete__input'
     if(multiple && selectedItems.length >= maxSelected ){
       inputClass = 'autocomplete__input autocomplete__input--hidden'
     }
+    let inputClearClass = 'autocomplete__input__clear'
+    if (searchValue === '') {
+      inputClearClass = 'autocomplete__input__clear autocomplete__input__clear--hidden'
+    }
+    let inputWrapClass = 'autocomplete__input--wrap'
+    if (menuVisible) {
+      inputWrapClass = 'autocomplete__input--wrap autocomplete__input--wrap--active'
+    }
 
     return (
-      <input type='text'
-             className={inputClass}
-             ref='searchInput'
-             placeholder={this.props.placeholder}
-             onClick={this.handleClick.bind(this)}
-             onFocus={this.handleFocus.bind(this)}
-             onBlur={this.handleBlur.bind(this)}
-             onKeyUp={this.handleKeyChange.bind(this)} />
+      <div className={inputWrapClass}>
+        <input type='text'
+               className={inputClass}
+               ref='searchInput'
+               placeholder={this.props.placeholder}
+               onClick={this.handleClick.bind(this)}
+               onFocus={this.handleFocus.bind(this)}
+               onKeyUp={this.handleKeyChange.bind(this)} />
+        <span className={inputClearClass}
+              onClick={this.handleInputClear.bind(this)}></span>
+      </div>
     )
   }
 
@@ -331,9 +344,6 @@ export default class Search extends Component {
     }
     if(menuVisible && selectedItems.length < maxSelected ){
       menuClass = 'autocomplete__menu'
-    }
-    if(selectedItems.length >= maxSelected ){
-      menuClass = 'autocomplete__menu autocomplete__menu--hidden'
     }
     return menuClass
   }
@@ -351,11 +361,13 @@ export default class Search extends Component {
           </ul>
         </div>
 
-        { multiple && this.renderInput() }
+        { this.renderInput() }
 
         <div className='autocomplete__menu--wrap'>
           <div className={menuClass} ref='autocomplete'>
-            { !multiple && this.renderInput() }
+            <span className="autocomplete__close"
+                  onClick={this.hideMenu.bind(this)}>
+            </span>
             <ul className='autocomplete__items'>
               {this.renderMenuItems()}
             </ul>

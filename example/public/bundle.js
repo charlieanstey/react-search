@@ -438,8 +438,8 @@
 	  }, {
 	    key: 'resetPlaceholder',
 	    value: function resetPlaceholder() {
-	      var placeholder = _reactDom2.default.findDOMNode(this.refs.placeholder);
-	      placeholder = this.props.placeholder;
+	      var el = _reactDom2.default.findDOMNode(this.refs.placeholder);
+	      el.placeholder = this.props.placeholder;
 	    }
 	  }, {
 	    key: 'handleRemove',
@@ -452,11 +452,6 @@
 	    key: 'handleFocus',
 	    value: function handleFocus(e) {
 	      this.focusInput();
-	    }
-	  }, {
-	    key: 'handleBlur',
-	    value: function handleBlur(e) {
-	      this.blurInput();
 	    }
 	  }, {
 	    key: 'handleClick',
@@ -492,8 +487,15 @@
 	          }
 	        }
 	      } else {
-	        this.updateSearchValue();
+	        this.updateSearchValue(newValue);
 	      }
+	    }
+	  }, {
+	    key: 'handleInputClear',
+	    value: function handleInputClear(e) {
+	      _reactDom2.default.findDOMNode(this.refs.searchInput).value = '';
+	      this.updateSearchValue('');
+	      this.focusInput(e);
 	    }
 	  }, {
 	    key: 'renderMenuItems',
@@ -556,21 +558,32 @@
 	      var _props9 = this.props,
 	          maxSelected = _props9.maxSelected,
 	          multiple = _props9.multiple;
-	      var selectedItems = this.state.selectedItems;
+	      var _state2 = this.state,
+	          menuVisible = _state2.menuVisible,
+	          searchValue = _state2.searchValue,
+	          selectedItems = _state2.selectedItems;
 
 	      var inputClass = 'autocomplete__input';
 	      if (multiple && selectedItems.length >= maxSelected) {
 	        inputClass = 'autocomplete__input autocomplete__input--hidden';
 	      }
+	      var inputClearClass = 'autocomplete__input__clear';
+	      if (searchValue === '') {
+	        inputClearClass = 'autocomplete__input__clear autocomplete__input__clear--hidden';
+	      }
+	      var inputWrapClass = 'autocomplete__input--wrap';
+	      if (menuVisible) {
+	        inputWrapClass = 'autocomplete__input--wrap autocomplete__input--wrap--active';
+	      }
 
-	      return _react2.default.createElement('input', { type: 'text',
+	      return _react2.default.createElement('div', { className: inputWrapClass }, _react2.default.createElement('input', { type: 'text',
 	        className: inputClass,
 	        ref: 'searchInput',
 	        placeholder: this.props.placeholder,
 	        onClick: this.handleClick.bind(this),
 	        onFocus: this.handleFocus.bind(this),
-	        onBlur: this.handleBlur.bind(this),
-	        onKeyUp: this.handleKeyChange.bind(this) });
+	        onKeyUp: this.handleKeyChange.bind(this) }), _react2.default.createElement('span', { className: inputClearClass,
+	        onClick: this.handleInputClear.bind(this) }));
 	    }
 	  }, {
 	    key: 'getMenuClass',
@@ -578,9 +591,9 @@
 	      var _props10 = this.props,
 	          maxSelected = _props10.maxSelected,
 	          multiple = _props10.multiple;
-	      var _state2 = this.state,
-	          menuVisible = _state2.menuVisible,
-	          selectedItems = _state2.selectedItems;
+	      var _state3 = this.state,
+	          menuVisible = _state3.menuVisible,
+	          selectedItems = _state3.selectedItems;
 
 	      var menuClass = 'autocomplete__menu autocomplete__menu--hidden';
 	      if (menuVisible && !multiple) {
@@ -588,9 +601,6 @@
 	      }
 	      if (menuVisible && selectedItems.length < maxSelected) {
 	        menuClass = 'autocomplete__menu';
-	      }
-	      if (selectedItems.length >= maxSelected) {
-	        menuClass = 'autocomplete__menu autocomplete__menu--hidden';
 	      }
 	      return menuClass;
 	    }
@@ -601,7 +611,8 @@
 
 	      var menuClass = this.getMenuClass();
 
-	      return _react2.default.createElement('div', { className: 'autocomplete' }, _react2.default.createElement('div', { className: 'autocomplete__selected' }, _react2.default.createElement('ul', { className: 'autocomplete__items' }, this.renderSelectedItems())), multiple && this.renderInput(), _react2.default.createElement('div', { className: 'autocomplete__menu--wrap' }, _react2.default.createElement('div', { className: menuClass, ref: 'autocomplete' }, !multiple && this.renderInput(), _react2.default.createElement('ul', { className: 'autocomplete__items' }, this.renderMenuItems()))));
+	      return _react2.default.createElement('div', { className: 'autocomplete' }, _react2.default.createElement('div', { className: 'autocomplete__selected' }, _react2.default.createElement('ul', { className: 'autocomplete__items' }, this.renderSelectedItems())), this.renderInput(), _react2.default.createElement('div', { className: 'autocomplete__menu--wrap' }, _react2.default.createElement('div', { className: menuClass, ref: 'autocomplete' }, _react2.default.createElement('span', { className: 'autocomplete__close',
+	        onClick: this.hideMenu.bind(this) }), _react2.default.createElement('ul', { className: 'autocomplete__items' }, this.renderMenuItems()))));
 	    }
 	  }]);
 
