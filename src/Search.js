@@ -193,8 +193,8 @@ export default class Search extends Component {
   }
 
   resetPlaceholder() {
-    let el = ReactDOM.findDOMNode(this.refs.placeholder)
-    el.placeholder = this.props.placeholder
+    let placeholder = ReactDOM.findDOMNode(this.refs.placeholder)
+    placeholder = this.props.placeholder
   }
 
   handleRemove(e) {

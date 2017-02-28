@@ -438,8 +438,8 @@
 	  }, {
 	    key: 'resetPlaceholder',
 	    value: function resetPlaceholder() {
-	      var el = _reactDom2.default.findDOMNode(this.refs.placeholder);
-	      el.placeholder = this.props.placeholder;
+	      var placeholder = _reactDom2.default.findDOMNode(this.refs.placeholder);
+	      placeholder = this.props.placeholder;
 	    }
 	  }, {
 	    key: 'handleRemove',
