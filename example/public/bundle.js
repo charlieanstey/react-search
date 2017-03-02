@@ -568,7 +568,7 @@
 	        inputClass = 'autocomplete__input autocomplete__input--hidden';
 	      }
 	      var inputClearClass = 'autocomplete__input__clear';
-	      if (searchValue === '') {
+	      if (searchValue === '' || multiple && selectedItems.length >= maxSelected) {
 	        inputClearClass = 'autocomplete__input__clear autocomplete__input__clear--hidden';
 	      }
 	      var inputWrapClass = 'autocomplete__input--wrap';

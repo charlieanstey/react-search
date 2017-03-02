@@ -308,11 +308,11 @@ export default class Search extends Component {
     const { maxSelected, multiple } = this.props;
     const { menuVisible, searchValue, selectedItems } = this.state;
     let inputClass = 'autocomplete__input'
-    if(multiple && selectedItems.length >= maxSelected ){
+    if (multiple && selectedItems.length >= maxSelected) {
       inputClass = 'autocomplete__input autocomplete__input--hidden'
     }
     let inputClearClass = 'autocomplete__input__clear'
-    if (searchValue === '') {
+    if (searchValue === '' || (multiple && selectedItems.length >= maxSelected)) {
       inputClearClass = 'autocomplete__input__clear autocomplete__input__clear--hidden'
     }
     let inputWrapClass = 'autocomplete__input--wrap'
