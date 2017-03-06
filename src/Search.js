@@ -175,7 +175,14 @@ export default class Search extends Component {
       e.stopPropagation();
     }
     this.showAllMenuItems()
-    ReactDOM.findDOMNode(this.refs.searchInput).placeholder = ''
+    let el = ReactDOM.findDOMNode(this.refs.searchInput)
+    if (e.type === "focus") {
+      setTimeout((function() {
+        return () => {
+          el.selectionStart = el.value.length
+        }
+      }(this)), 100)
+    }
     this.blurTimeout = setTimeout(() => {
       ReactDOM.findDOMNode(this.refs.searchInput).focus()
     }, 500)
@@ -204,11 +211,11 @@ export default class Search extends Component {
   }
 
   handleFocus(e) {
-    this.focusInput()
+    this.focusInput(e)
   }
 
   handleClick(e) {
-    this.focusInput()
+    this.focusInput(e)
   }
 
   handleItemClick(e) {

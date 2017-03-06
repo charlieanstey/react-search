@@ -413,7 +413,14 @@
 	        e.stopPropagation();
 	      }
 	      this.showAllMenuItems();
-	      _reactDom2.default.findDOMNode(this.refs.searchInput).placeholder = '';
+	      var el = _reactDom2.default.findDOMNode(this.refs.searchInput);
+	      if (e.type === "focus") {
+	        setTimeout(function () {
+	          return function () {
+	            el.selectionStart = el.value.length;
+	          };
+	        }(this), 100);
+	      }
 	      this.blurTimeout = setTimeout(function () {
 	        _reactDom2.default.findDOMNode(_this7.refs.searchInput).focus();
 	      }, 500);
@@ -451,12 +458,12 @@
 	  }, {
 	    key: 'handleFocus',
 	    value: function handleFocus(e) {
-	      this.focusInput();
+	      this.focusInput(e);
 	    }
 	  }, {
 	    key: 'handleClick',
 	    value: function handleClick(e) {
-	      this.focusInput();
+	      this.focusInput(e);
 	    }
 	  }, {
 	    key: 'handleItemClick',
