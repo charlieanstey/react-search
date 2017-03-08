@@ -33,7 +33,8 @@ export default class Search extends Component {
       filterSearchItems: React.PropTypes.bool,
       fixedMenu: React.PropTypes.bool,
       onKeyChange: React.PropTypes.func,
-      getItemsAsync: React.PropTypes.func
+      getItemsAsync: React.PropTypes.func,
+      onFocus: React.PropTypes.func
     }
   }
 
@@ -77,12 +78,23 @@ export default class Search extends Component {
   }
 
   showMenu() {
-    this.setState({menuVisible: true })
+    this.setState({menuVisible: true }, () => {
+      this.triggerIsActiveChange()
+    })
   }
 
   hideMenu() {
-    this.setState({menuVisible: false })
+    this.setState({menuVisible: false }, () => {
+      this.triggerIsActiveChange()
+    })
     this.resetPlaceholder()
+  }
+  
+  triggerIsActiveChange() {
+    if (this.props.onFocus !== undefined) {
+      let isActive = this.state.menuVisible
+      this.props.onFocus(isActive)
+    }
   }
 
   triggerItemsChanged() {
@@ -354,13 +366,28 @@ export default class Search extends Component {
     }
     return menuClass
   }
+  
+  getMenuWrapClass() {
+    const { maxSelected, multiple } = this.props;
+    const { menuVisible, selectedItems } = this.state;
+    let menuWrapClass = 'autocomplete__menu--wrap autocomplete__menu--wrap--hidden'
+    if(menuVisible && !multiple){
+      menuWrapClass = 'autocomplete__menu--wrap'
+    }
+    if(menuVisible && selectedItems.length < maxSelected ){
+      menuWrapClass = 'autocomplete__menu--wrap'
+    }
+    return menuWrapClass
+  }
 
   render () {
     const { multiple } = this.props;
+    let menuWrapClass = this.getMenuWrapClass()
     let menuClass = this.getMenuClass()
+    let isActive = this.state.menuVisible
 
     return (
-      <div className='autocomplete'>
+      <div className={`autocomplete${isActive ? ' active' : ''}`}>
 
         <div className='autocomplete__selected'>
           <ul className='autocomplete__items'>
@@ -370,11 +397,11 @@ export default class Search extends Component {
 
         { this.renderInput() }
 
-        <div className='autocomplete__menu--wrap'>
+        <div className={menuWrapClass}>
+          <span className="autocomplete__close"
+                onClick={this.hideMenu.bind(this)}>
+          </span>
           <div className={menuClass} ref='autocomplete'>
-            <span className="autocomplete__close"
-                  onClick={this.hideMenu.bind(this)}>
-            </span>
             <ul className='autocomplete__items'>
               {this.renderMenuItems()}
             </ul>

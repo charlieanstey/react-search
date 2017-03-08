@@ -220,7 +220,8 @@
 	        filterSearchItems: _react2.default.PropTypes.bool,
 	        fixedMenu: _react2.default.PropTypes.bool,
 	        onKeyChange: _react2.default.PropTypes.func,
-	        getItemsAsync: _react2.default.PropTypes.func
+	        getItemsAsync: _react2.default.PropTypes.func,
+	        onFocus: _react2.default.PropTypes.func
 	      };
 	    }
 	  }]);
@@ -281,13 +282,29 @@
 	  }, {
 	    key: 'showMenu',
 	    value: function showMenu() {
-	      this.setState({ menuVisible: true });
+	      var _this2 = this;
+
+	      this.setState({ menuVisible: true }, function () {
+	        _this2.triggerIsActiveChange();
+	      });
 	    }
 	  }, {
 	    key: 'hideMenu',
 	    value: function hideMenu() {
-	      this.setState({ menuVisible: false });
+	      var _this3 = this;
+
+	      this.setState({ menuVisible: false }, function () {
+	        _this3.triggerIsActiveChange();
+	      });
 	      this.resetPlaceholder();
+	    }
+	  }, {
+	    key: 'triggerIsActiveChange',
+	    value: function triggerIsActiveChange() {
+	      if (this.props.onFocus !== undefined) {
+	        var isActive = this.state.menuVisible;
+	        this.props.onFocus(isActive);
+	      }
 	    }
 	  }, {
 	    key: 'triggerItemsChanged',
@@ -306,51 +323,51 @@
 	  }, {
 	    key: 'triggerGetItemsAsync',
 	    value: function triggerGetItemsAsync(searchValue) {
-	      var _this2 = this;
+	      var _this4 = this;
 
 	      if (this.props.getItemsAsync !== undefined) {
 	        this.props.getItemsAsync(searchValue, function () {
-	          _this2.updateSearchValue(searchValue);
+	          _this4.updateSearchValue(searchValue);
 	        });
 	      }
 	    }
 	  }, {
 	    key: 'setSelected',
 	    value: function setSelected(selected) {
-	      var _this3 = this;
+	      var _this5 = this;
 
 	      this.setState({ selectedItems: selected }, function () {
-	        _this3.triggerItemsChanged();
+	        _this5.triggerItemsChanged();
 	      });
 	    }
 	  }, {
 	    key: 'addSelected',
 	    value: function addSelected(selected) {
-	      var _this4 = this;
+	      var _this6 = this;
 
 	      var items = this.state.selectedItems;
 	      items.push(selected);
 	      this.setState({ selectedItems: items }, function () {
-	        _this4.triggerItemsChanged();
+	        _this6.triggerItemsChanged();
 	      });
 	    }
 	  }, {
 	    key: 'removeSelected',
 	    value: function removeSelected(itemId) {
-	      var _this5 = this;
+	      var _this7 = this;
 
 	      var items = this.state.selectedItems;
 	      var itemsUpdated = items.filter(function (i) {
 	        return i.id != itemId;
 	      });
 	      this.setState({ selectedItems: itemsUpdated }, function () {
-	        _this5.triggerItemsChanged();
+	        _this7.triggerItemsChanged();
 	      });
 	    }
 	  }, {
 	    key: 'updateSearchValue',
 	    value: function updateSearchValue(value) {
-	      var _this6 = this;
+	      var _this8 = this;
 
 	      var _props3 = this.props,
 	          items = _props3.items,
@@ -358,10 +375,10 @@
 
 	      this.setState({ searchValue: value }, function () {
 	        if (value) {
-	          var menuItems = filterSearchItems ? _this6.SearchItemInArrayObjects(items, _this6.state.searchValue, 'value') : items;
-	          _this6.setMenuItems(menuItems);
+	          var menuItems = filterSearchItems ? _this8.SearchItemInArrayObjects(items, _this8.state.searchValue, 'value') : items;
+	          _this8.setMenuItems(menuItems);
 	        } else {
-	          _this6.setMenuItems([]);
+	          _this8.setMenuItems([]);
 	        }
 	      });
 	    }
@@ -406,7 +423,7 @@
 	  }, {
 	    key: 'focusInput',
 	    value: function focusInput(e) {
-	      var _this7 = this;
+	      var _this9 = this;
 
 	      if (e) {
 	        e.preventDefault();
@@ -422,23 +439,23 @@
 	        }(this), 100);
 	      }
 	      this.blurTimeout = setTimeout(function () {
-	        _reactDom2.default.findDOMNode(_this7.refs.searchInput).focus();
+	        _reactDom2.default.findDOMNode(_this9.refs.searchInput).focus();
 	      }, 500);
 	    }
 	  }, {
 	    key: 'blurInput',
 	    value: function blurInput() {
-	      var _this8 = this;
+	      var _this10 = this;
 
 	      var _props6 = this.props,
 	          multiple = _props6.multiple,
 	          fixedMenu = _props6.fixedMenu;
 
 	      this.blurTimeout = setTimeout(function () {
-	        var input = _reactDom2.default.findDOMNode(_this8.refs.searchInput);
+	        var input = _reactDom2.default.findDOMNode(_this10.refs.searchInput);
 	        if (input) input.blur();
 	        if (!multiple || !fixedMenu) {
-	          _this8.hideMenu();
+	          _this10.hideMenu();
 	        }
 	      }, 500);
 	    }
@@ -507,7 +524,7 @@
 	  }, {
 	    key: 'renderMenuItems',
 	    value: function renderMenuItems() {
-	      var _this9 = this;
+	      var _this11 = this;
 
 	      var _state = this.state,
 	          menuItems = _state.menuItems,
@@ -521,10 +538,10 @@
 	      }
 
 	      var items = menuItems.map(function (item, i) {
-	        if (_this9.itemSelected(item.id)) {
+	        if (_this11.itemSelected(item.id)) {
 	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item autocomplete__item--disabled' }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
 	        } else {
-	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item', onClick: _this9.handleSelect.bind(_this9) }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
+	          return _react2.default.createElement('li', { key: i, className: 'autocomplete__item', onClick: _this11.handleSelect.bind(_this11) }, _react2.default.createElement('span', { key: i, 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }));
 	        }
 	      });
 	      return items;
@@ -532,7 +549,7 @@
 	  }, {
 	    key: 'renderSelectedItems',
 	    value: function renderSelectedItems() {
-	      var _this10 = this;
+	      var _this12 = this;
 
 	      var selectedItems = this.state.selectedItems;
 	      var _props8 = this.props,
@@ -555,7 +572,7 @@
 	          itemClass = 'autocomplete__item autocomplete__item--selected';
 	        }
 
-	        return _react2.default.createElement('li', { key: i, 'data-id': item.id, className: itemClass, onClick: _this10.handleRemove.bind(_this10) }, _react2.default.createElement('span', { className: 'autocomplete__item__value', 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }), dropDown);
+	        return _react2.default.createElement('li', { key: i, 'data-id': item.id, className: itemClass, onClick: _this12.handleRemove.bind(_this12) }, _react2.default.createElement('span', { className: 'autocomplete__item__value', 'data-id': item.id, dangerouslySetInnerHTML: { __html: item.value } }), dropDown);
 	      });
 	      return items;
 	    }
@@ -612,14 +629,35 @@
 	      return menuClass;
 	    }
 	  }, {
+	    key: 'getMenuWrapClass',
+	    value: function getMenuWrapClass() {
+	      var _props11 = this.props,
+	          maxSelected = _props11.maxSelected,
+	          multiple = _props11.multiple;
+	      var _state4 = this.state,
+	          menuVisible = _state4.menuVisible,
+	          selectedItems = _state4.selectedItems;
+
+	      var menuWrapClass = 'autocomplete__menu--wrap autocomplete__menu--wrap--hidden';
+	      if (menuVisible && !multiple) {
+	        menuWrapClass = 'autocomplete__menu--wrap';
+	      }
+	      if (menuVisible && selectedItems.length < maxSelected) {
+	        menuWrapClass = 'autocomplete__menu--wrap';
+	      }
+	      return menuWrapClass;
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var multiple = this.props.multiple;
 
+	      var menuWrapClass = this.getMenuWrapClass();
 	      var menuClass = this.getMenuClass();
+	      var isActive = this.state.menuVisible;
 
-	      return _react2.default.createElement('div', { className: 'autocomplete' }, _react2.default.createElement('div', { className: 'autocomplete__selected' }, _react2.default.createElement('ul', { className: 'autocomplete__items' }, this.renderSelectedItems())), this.renderInput(), _react2.default.createElement('div', { className: 'autocomplete__menu--wrap' }, _react2.default.createElement('div', { className: menuClass, ref: 'autocomplete' }, _react2.default.createElement('span', { className: 'autocomplete__close',
-	        onClick: this.hideMenu.bind(this) }), _react2.default.createElement('ul', { className: 'autocomplete__items' }, this.renderMenuItems()))));
+	      return _react2.default.createElement('div', { className: 'autocomplete' + (isActive ? ' active' : '') }, _react2.default.createElement('div', { className: 'autocomplete__selected' }, _react2.default.createElement('ul', { className: 'autocomplete__items' }, this.renderSelectedItems())), this.renderInput(), _react2.default.createElement('div', { className: menuWrapClass }, _react2.default.createElement('span', { className: 'autocomplete__close',
+	        onClick: this.hideMenu.bind(this) }), _react2.default.createElement('div', { className: menuClass, ref: 'autocomplete' }, _react2.default.createElement('ul', { className: 'autocomplete__items' }, this.renderMenuItems()))));
 	    }
 	  }]);
 
