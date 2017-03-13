@@ -78,16 +78,20 @@ export default class Search extends Component {
   }
 
   showMenu() {
-    this.setState({menuVisible: true }, () => {
-      this.triggerIsActiveChange()
-    })
+    if (!this.state.menuVisible) {
+      this.setState({menuVisible: true }, () => {
+        this.triggerIsActiveChange()
+      })
+    }
   }
 
   hideMenu() {
-    this.setState({menuVisible: false }, () => {
-      this.triggerIsActiveChange()
-    })
-    this.resetPlaceholder()
+    if (this.state.menuVisible) {
+      this.setState({menuVisible: false }, () => {
+        this.triggerIsActiveChange()
+      })
+      this.resetPlaceholder()
+    }
   }
   
   triggerIsActiveChange() {
