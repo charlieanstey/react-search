@@ -212,7 +212,7 @@ export default class Search extends Component {
       if (!multiple || !fixedMenu) {
         this.hideMenu()
       }
-    }, 500)
+    }, 100)
   }
 
   resetPlaceholder() {
@@ -224,6 +224,10 @@ export default class Search extends Component {
     e.preventDefault()
     e.stopPropagation()
     this.removeSelected(e.target.dataset.id)
+  }
+  
+  handleBlur(e) {
+    this.blurInput(e)
   }
 
   handleFocus(e) {
@@ -245,6 +249,10 @@ export default class Search extends Component {
   }
 
   handleKeyChange (e) {
+    if (e.which === 27) {
+      this.blurInput()
+      return
+    }
     const { getItemsAsync } = this.props;
     let newValue = this.refs.searchInput.value
     let oldValue = this.state.searchValue
@@ -263,6 +271,10 @@ export default class Search extends Component {
   }
   
   handleInputClear(e) {
+    e.preventDefault()
+    e.stopPropagation()
+    this.blurTimeout = null
+    clearTimeout(this.blurTimeout)
     ReactDOM.findDOMNode(this.refs.searchInput).value = ''
     this.updateSearchValue('')
     this.focusInput(e)
@@ -341,6 +353,9 @@ export default class Search extends Component {
     let inputWrapClass = 'autocomplete__input--wrap'
     if (menuVisible) {
       inputWrapClass = 'autocomplete__input--wrap autocomplete__input--wrap--active'
+    }
+    if (multiple && selectedItems.length >= maxSelected) {
+      inputWrapClass = 'autocomplete__input--wrap autocomplete__input--wrap--hidden'
     }
 
     return (

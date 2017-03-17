@@ -461,7 +461,7 @@
 	        if (!multiple || !fixedMenu) {
 	          _this10.hideMenu();
 	        }
-	      }, 500);
+	      }, 100);
 	    }
 	  }, {
 	    key: 'resetPlaceholder',
@@ -475,6 +475,11 @@
 	      e.preventDefault();
 	      e.stopPropagation();
 	      this.removeSelected(e.target.dataset.id);
+	    }
+	  }, {
+	    key: 'handleBlur',
+	    value: function handleBlur(e) {
+	      this.blurInput(e);
 	    }
 	  }, {
 	    key: 'handleFocus',
@@ -501,6 +506,10 @@
 	  }, {
 	    key: 'handleKeyChange',
 	    value: function handleKeyChange(e) {
+	      if (e.which === 27) {
+	        this.blurInput();
+	        return;
+	      }
 	      var getItemsAsync = this.props.getItemsAsync;
 
 	      var newValue = this.refs.searchInput.value;
@@ -521,6 +530,10 @@
 	  }, {
 	    key: 'handleInputClear',
 	    value: function handleInputClear(e) {
+	      e.preventDefault();
+	      e.stopPropagation();
+	      this.blurTimeout = null;
+	      clearTimeout(this.blurTimeout);
 	      _reactDom2.default.findDOMNode(this.refs.searchInput).value = '';
 	      this.updateSearchValue('');
 	      this.focusInput(e);
@@ -602,6 +615,9 @@
 	      var inputWrapClass = 'autocomplete__input--wrap';
 	      if (menuVisible) {
 	        inputWrapClass = 'autocomplete__input--wrap autocomplete__input--wrap--active';
+	      }
+	      if (multiple && selectedItems.length >= maxSelected) {
+	        inputWrapClass = 'autocomplete__input--wrap autocomplete__input--wrap--hidden';
 	      }
 
 	      return _react2.default.createElement('div', { className: inputWrapClass }, _react2.default.createElement('input', { type: 'text',
