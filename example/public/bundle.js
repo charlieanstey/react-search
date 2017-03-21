@@ -247,11 +247,7 @@
 	          initialSelected = _props.initialSelected,
 	          fixedMenu = _props.fixedMenu;
 
-	      if (initialSelected instanceof Array) {
-	        this.setSelected(initialSelected);
-	      } else {
-	        this.addSelected(initialSelected);
-	      }
+	      this.setState({ selectedItems: initialSelected });
 	      if (fixedMenu) this.showMenu();
 	    }
 	  }, {

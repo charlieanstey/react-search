@@ -50,11 +50,7 @@ export default class Search extends Component {
 
   componentDidMount() {
     const { initialSelected, fixedMenu } = this.props;
-    if(initialSelected instanceof Array) {
-      this.setSelected(initialSelected)
-    } else {
-      this.addSelected(initialSelected)
-    }
+    this.setState({selectedItems: initialSelected })
     if (fixedMenu) this.showMenu()
   }
 
