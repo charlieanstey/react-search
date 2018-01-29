@@ -1,7 +1,8 @@
 /**
  * Autocomplete Search component
 **/
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 
 export default class Search extends Component {
@@ -20,21 +21,21 @@ export default class Search extends Component {
 
   static get propTypes () {
     return {
-      items: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-      initialSelected: React.PropTypes.oneOfType([
-        React.PropTypes.object,
-        React.PropTypes.arrayOf(React.PropTypes.object)
+      items: PropTypes.arrayOf(PropTypes.object).isRequired,
+      initialSelected: PropTypes.oneOfType([
+        PropTypes.object,
+        PropTypes.arrayOf(PropTypes.object)
       ]),
-      onItemsChanged: React.PropTypes.func,
-      placeholder: React.PropTypes.string,
-      NotFoundPlaceholder: React.PropTypes.string,
-      maxSelected: React.PropTypes.number,
-      multiple: React.PropTypes.bool,
-      filterSearchItems: React.PropTypes.bool,
-      fixedMenu: React.PropTypes.bool,
-      onKeyChange: React.PropTypes.func,
-      getItemsAsync: React.PropTypes.func,
-      onFocus: React.PropTypes.func
+      onItemsChanged: PropTypes.func,
+      placeholder: PropTypes.string,
+      NotFoundPlaceholder: PropTypes.string,
+      maxSelected: PropTypes.number,
+      multiple: PropTypes.bool,
+      filterSearchItems: PropTypes.bool,
+      fixedMenu: PropTypes.bool,
+      onKeyChange: PropTypes.func,
+      getItemsAsync: PropTypes.func,
+      onFocus: PropTypes.func
     }
   }
 
@@ -89,7 +90,7 @@ export default class Search extends Component {
       this.resetPlaceholder()
     }
   }
-  
+
   triggerIsActiveChange() {
     if (this.props.onFocus !== undefined) {
       let isActive = this.state.menuVisible
@@ -221,7 +222,7 @@ export default class Search extends Component {
     e.stopPropagation()
     this.removeSelected(e.target.dataset.id)
   }
-  
+
   handleBlur(e) {
     this.blurInput(e)
   }
@@ -265,7 +266,7 @@ export default class Search extends Component {
       this.updateSearchValue(newValue)
     }
   }
-  
+
   handleInputClear(e) {
     e.preventDefault()
     e.stopPropagation()
@@ -381,7 +382,7 @@ export default class Search extends Component {
     }
     return menuClass
   }
-  
+
   getMenuWrapClass() {
     const { maxSelected, multiple } = this.props;
     const { menuVisible, selectedItems } = this.state;

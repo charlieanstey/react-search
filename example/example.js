@@ -1,6 +1,7 @@
 import Search from '../lib/Search' /* 'react-search' */
 import ReactDOM from 'react-dom'
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class TestComponent extends Component {
 
